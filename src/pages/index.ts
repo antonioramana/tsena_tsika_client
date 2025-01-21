@@ -1,0 +1,10 @@
+export { default as Accueil } from "./users/Accueil";
+export { default as Achats } from "./users/Achats";
+export { default as Discussion } from "./users/Discussion";
+export { default as SuiviAchats } from "./users/SuiviAchats";
+export { default as AccueilAd } from "./admin/AccueilAd";
+export { default as ClientAd } from "./admin/ClientAd";
+export { default as MarchandiseAd } from "./admin/MarchandiseAd";
+export { default as AchatAd } from "./admin/AchatAd";
+export { default as FournisseurAd } from "./admin/FournisseurAd";
+export { default as MarcheAd } from "./admin/MarcheAd";

@@ -21,7 +21,7 @@ const GlobalMessage: React.FC = () => {
 
   return (
     <div
-      className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-10 py-4 rounded shadow-lg z-50 ${getStyle()}`}
+      className={`fixed top-1/3 left-1/2 transform -translate-x-1/2 px-10 py-4 rounded shadow-lg z-50 ${getStyle()}`}
     >
       <div className="flex justify-between items-center">
         <span>{message}</span>

@@ -19,10 +19,10 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setType(type);
     setMessageState(text);
 
-    // Auto-clear message after 5 seconds
+    // Auto-clear message after 10 seconds
     setTimeout(() => {
       clearMessage();
-    }, 5000);
+    }, 10000);
   };
 
   const clearMessage = () => {

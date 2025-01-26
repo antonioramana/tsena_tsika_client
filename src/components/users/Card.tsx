@@ -31,7 +31,7 @@ export default function Card({ id, title, price, image }: CardProps) {
           alt={title}
         />
         <FaShoppingCart
-          className="absolute right-4 top-4 text-2xl text-myYellow cursor-pointer hover:scale-110 transition-transform duration-200"
+          className="absolute right-8 top-8 text-3xl text-myYellow cursor-pointer hover:scale-110 transition-transform duration-200"
           onClick={handleAddToCart}
         />
       </div>

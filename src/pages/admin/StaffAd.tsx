@@ -19,6 +19,7 @@ export default function StaffAd() {
   const [error, setError] = useState(null);
   const [staffs, setStaffs] = useState([]);
   const [editStaffId, setEditStaffId] = useState(null);
+  const [editStaffMail, setEditStaffMail] = useState(null);
   const [deleteStaffId, setDeleteStaffId] = useState(null);
 
   // Charger les données clients
@@ -105,6 +106,7 @@ export default function StaffAd() {
 
   const handleEditStaff = (staff) => {
     setEditStaffId(staff.id);
+    setEditStaffMail(staff.mailStaff);
     setStaffData({
       ...staff,
       mdpStaff: "", // Vide le mot de passe lors de l'édition
@@ -115,9 +117,9 @@ export default function StaffAd() {
 
   const handleUpdateStaff = () => {
     console.log("data", staffData);
-    if (validateForm() && editStaffId !== null) {
+    if (validateForm() && editStaffMail !== null) {
       axios
-        .put(`http://localhost:8080/staff/edit/${staffData.mailStaff}`, {
+        .put(`http://localhost:8080/staff/edit/${editStaffMail}`, {
           nomStaff: staffData.nomStaff,
           mailStaff: staffData.mailStaff,
           mdpStaff: staffData.mdpStaff,

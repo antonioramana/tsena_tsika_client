@@ -103,7 +103,7 @@ export default function Header() {
       const response = await axios.post("http://localhost:8080/achat/add", payload);
       console.log("dataaaa", response)
        const refAchat= response.data?.ref;
-      setMessage("success", "Achat validé avec succès !");
+      setMessage("success", "Commande validé avec succès !");
 
       setCartItems([]); 
       closeCartModal();
@@ -286,8 +286,8 @@ export default function Header() {
               />
                 {!isDateValid && (
                   <p className="text-red-500 text-sm">
-                    La date de livraison doit être au moins 48h après votre commande. Nous vous contacterons pour confirmer un jour disponible avant cette date.
-                  </p>
+                    Merci pour votre proposition mais la date de livraison doit être au moins 48h après votre commande. Nous vous contacterons si la livraison sera possible avant 48h.
+                    </p>
                 )}
 
             </div>

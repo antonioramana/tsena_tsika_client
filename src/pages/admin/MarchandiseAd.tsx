@@ -38,6 +38,7 @@ const MarchandiseAd = () => {
     try {
       const response = await axios.get("http://localhost:8080/produit/showall");
       setProduits(response.data);
+      console.log("produit ",produits)
     } catch (error) {
       console.error("Erreur lors de la récupération des produits", error);
     }

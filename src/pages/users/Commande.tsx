@@ -69,7 +69,7 @@ export default function Commande() {
     try {
       const response = await axios.post("http://localhost:8080/achat/add", payload);
        const refAchat= response.data?.ref;
-       setMessage("success","Achat effectué avec succès!");
+       setMessage("success","Votre commande a été effectuée avec succès!");
        if(refAchat){
          navigate("/checkout/"+refAchat);
        }
@@ -186,7 +186,7 @@ export default function Commande() {
           />
            {!isDateValid && (
                   <p className="text-red-500 text-sm">
-                    La date de livraison doit être au moins 48h après votre commande. Nous vous contacterons pour confirmer un jour disponible avant cette date.
+                    Merci pour votre proposition mais la date de livraison doit être au moins 48h après votre commande. Nous vous contacterons si la livraison sera possible avant 48h.
                   </p>
                )}
         </div>

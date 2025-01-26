@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMessage } from "../../contexts/MessageContext";
 
 const Checkout = () => {
@@ -70,7 +70,7 @@ const Checkout = () => {
         ...paymentDetails,
         refAchat,
       });
-      setMessage("success","Paiement effectué avec succès !")
+      setMessage("success","Le Paiement est effectué et on attend la validation! Pour plus d'information, contactez directement +261 34 74 021 02 ")
       console.log("", paymentDetails)
       setReste(response.data.reste);
       navigate("/suivi-achats")
@@ -90,8 +90,11 @@ const Checkout = () => {
     switch (paymentDetails.typePaiment) {
       case "Mobile money":
         return (
-          <div className="p-4 bg-blue-50 rounded border text-blue-800">
-            <p>Numéro Mobile Money : <strong>034 12 345 67</strong></p>
+          <div className="p-2 bg-blue-50 rounded border text-yellow-900">
+            <p>Mvola(YAS) : <strong>+261 34 74 021 02</strong></p>
+            <p>Orange Money : <strong>+261 32 83 895 23</strong></p>
+            <p>Airtel Money : <strong>+261 33 25 102 34</strong></p>
+            <p>Au nom de: <strong>Entreprise TMS</strong></p>
           </div>
         );
       case "Virement bancaire":
@@ -106,6 +109,12 @@ const Checkout = () => {
             <p>Adresse : <strong>Lot 1M113 Andranovato Manakara</strong></p>
           </div>
         );
+        case "Chèque":
+        return (
+          <div className="p-4 bg-yellow-50 rounded border text-blue-800">
+            <p>Nom à mettre sur le Chèque: <strong>Entreprise TMS</strong></p>
+          </div>
+        );
       default:
         return null;
     }
@@ -113,7 +122,10 @@ const Checkout = () => {
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6 text-myMarron">Paiement</h1>
+      <Link to={"/suivi-achats"} className="text-myWhite bg-myYellowLin px-12 py-2  rounded-full">
+              Retour
+        </Link>
+      <h1 className="text-2xl font-bold my-6 text-myMarron">Paiement</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Colonne gauche : Détails de l'achat */}
         <div className="p-6 bg-white shadow rounded">

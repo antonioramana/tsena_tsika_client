@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaUsers, FaTruck, FaShoppingCart, FaMoneyBill, FaBox, FaStore } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const AccueilAd = () => {
 const [loading, setLoading]= useState(true);
@@ -34,13 +35,13 @@ const [stats, setStats]= useState([]);
       {/* Statistics Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {/* Cards */}
-        <Card title="Clients" value={stats.nbClient} icon={<FaUsers />} color="bg-blue-500" />
-        <Card title="Fournisseurs" value={stats.nbFournisseur} icon={<FaTruck />} color="bg-green-500" />
-        <Card title="Staff" value={stats.nbStaff} icon={<FaStore />} color="bg-orange-500" />
-        <Card title="Articles" value={stats.nbArticle} icon={<FaBox />} color="bg-purple-500" />
-        <Card title="Produits" value={stats.nbProduit} icon={<FaShoppingCart />} color="bg-pink-500" />
-        <Card title="Achats" value={stats.nbAchat} icon={<FaShoppingCart />} color="bg-teal-500" />
-        <Card title="Paiements" value={stats.nbPaiment} icon={<FaMoneyBill />} color="bg-red-500" />
+        <Card href={"/admin/client"} title="Clients" value={stats.nbClient} icon={<FaUsers />} color="bg-blue-500" />
+        <Card href={"/admin/fournisseur"} title="Fournisseurs" value={stats.nbFournisseur} icon={<FaTruck />} color="bg-green-500" />
+        <Card href={"/admin/staff"} title="Staff" value={stats.nbStaff} icon={<FaStore />} color="bg-orange-500" />
+        <Card href={"/admin/marchandise"} title="Articles" value={stats.nbArticle} icon={<FaBox />} color="bg-purple-500" />
+        <Card href={"/admin/marchandise"} title="Produits" value={stats.nbProduit} icon={<FaShoppingCart />} color="bg-pink-500" />
+        <Card href={"/admin/achat"} title="Achats" value={stats.nbAchat} icon={<FaShoppingCart />} color="bg-teal-500" />
+        <Card href={"/admin/achat"} title="Paiements" value={stats.nbPaiment} icon={<FaMoneyBill />} color="bg-red-500" />
       </div>
 
      {/* Split View Section */}
@@ -63,7 +64,7 @@ const [stats, setStats]= useState([]);
 
   {/* Last Purchases */}
   <div className="bg-white rounded-md shadow-sm p-4">
-    <h2 className="text-base font-semibold text-gray-700 mb-3">Derniers Achats</h2>
+    <h2 className="text-base font-semibold text-gray-700 mb-3">5 derniers paiements</h2>
     <div className="overflow-x-auto bg-white shadow-sm rounded-md border border-gray-200">
       <table className="w-full text-xs text-left text-gray-500">
         <thead className="bg-gray-50 text-gray-700 uppercase">
@@ -102,15 +103,15 @@ const [stats, setStats]= useState([]);
 };
 
 // Card Component
-const Card = ({ title, value, icon, color }) => {
+const Card = ({ title, value, icon, color, href }) => {
   return (
-    <div className={`flex items-center p-4 rounded-lg shadow-lg ${color} text-white`}>
+    <Link to={href} className={`flex items-center p-4 rounded-lg shadow-lg ${color} text-white`}>
       <div className="text-4xl mr-4">{icon}</div>
       <div>
         <p className="text-lg font-semibold">{title}</p>
         <p className="text-2xl font-bold">{value}</p>
       </div>
-    </div>
+    </Link>
   );
 };
 

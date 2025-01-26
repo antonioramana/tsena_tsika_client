@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/useAuth";
+import { useMessage } from "../../contexts/MessageContext";
 
 export default function GestionFichiers() {
   const [dossiers, setDossiers] = useState([]);
@@ -11,6 +12,7 @@ export default function GestionFichiers() {
   const [newDossierFile, setNewDossierFile] = useState(null); // Fichier pour le nouveau dossier
   const [isCreating, setIsCreating] = useState(false); // Statut de la création d'un dossier
   const { user } = useAuth();
+  const { setMessage } = useMessage();
 
   const numMatricule = user?.numMatricule;
 
@@ -91,7 +93,7 @@ export default function GestionFichiers() {
   // Créer un nouveau dossier avec un fichier pour la "Demande de devis"
   const handleCreateDossier = async () => {
     if (!newDossierFile) {
-      alert("Veuillez sélectionner un fichier pour la demande de devis.");
+      setMessage("error","Veuillez sélectionner un fichier pour la demande de devis.")
       return;
     }
 
@@ -111,14 +113,14 @@ export default function GestionFichiers() {
       if (response.status === 201) {
         // Ajouter le nouveau dossier à la liste
         setDossiers((prev) => [...prev, response.data]);
-        alert("Dossier créé avec succès !");
+        setMessage("success","Dossier créé avec succès !")
         setNewDossierFile(null);
       } else {
-        alert("Échec de la création du dossier.");
+        setMessage("error","Échec de la création du dossier.");
       }
     } catch (error) {
       console.error("Erreur lors de la création du dossier:", error);
-      alert("Erreur lors de la création du dossier.");
+      setMessage("error","Erreur lors de la création du dossier.");
     } finally {
       setIsCreating(false); // Fin de la création
     }

@@ -150,6 +150,8 @@ import { CartProvider } from "./contexts/CartContext";
 import PaymentPage from "./pages/users/PaymentPage";
 import AchatsProcedural from "./pages/users/AchatsProcedural";
 import Checkout from "./pages/users/Checkout";
+import { MessageProvider } from "./contexts/MessageContext";
+import GlobalMessage from "./components/GlobalMessage";
 
 const routes = createBrowserRouter([
   {
@@ -265,10 +267,13 @@ const routes = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <MessageProvider>
     <CartProvider>
+    <GlobalMessage />
     <AuthProvider>
       <RouterProvider router={routes} />
     </AuthProvider>
     </CartProvider>
+    </MessageProvider>
   </StrictMode>
 );

@@ -3,6 +3,17 @@ import axios from "axios";
 import Modal from "../../components/Modal";
 import Table from "../../components/Table";
 import { formatDateToFrench } from "../../utils/formatDateToFrench";
+import generateInvoicePDF from "../../services/generateInvoicePDF";
+
+const etatOptions = [
+  "Tous",
+  "En attente de traitement",
+  "En cours de traitement",
+  "En attente de livraison",
+  "En cours de livraison",
+  "Livré",
+  "Annulé",
+];
 
 export default function AchatAd() {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -11,6 +22,13 @@ export default function AchatAd() {
   const [selectedAchat, setSelectedAchat] = useState(null);
   const [achatDetails, setAchatDetails] = useState(null);
   const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
+  const [paymentStatusMessage, setPaymentStatusMessage] = useState('');
+
+  const [etatFiltre, setEtatFiltre] = useState("Tous");
+
+  const achatsFiltres = etatFiltre === "Tous"
+  ? achats
+  : achats.filter((achat) => achat.etat === etatFiltre);
 
   const headers = [
     { label: "Référence Achat", key: "refAchat", className: "w-32" },
@@ -56,6 +74,12 @@ export default function AchatAd() {
             paiment.idPaiment === idPaiment ? { ...paiment, valide: newValide } : paiment
           ),
         }));
+        if (newValide) {
+          setPaymentStatusMessage('Le paiement a été validé avec succès.');
+        } else {
+          setPaymentStatusMessage('Le paiement a été annulé.');
+        }
+                setTimeout(() => setPaymentStatusMessage(''), 5000);
       })
       .catch((error) => console.error("Erreur lors de la mise à jour du paiement:", error));
   };
@@ -127,9 +151,31 @@ export default function AchatAd() {
   };
   return (
     <div className="p-6 space-y-6">
+ <div className="mb-6 flex items-center space-x-6">
+  <label
+    htmlFor="etatFilter"
+    className="text-lg font-semibold text-gray-800"
+  >
+    Filtrer par état :
+  </label>
+  <select
+    id="etatFilter"
+    value={etatFiltre}
+    onChange={(e) => setEtatFiltre(e.target.value)}
+    className="px-5 py-3 border-2 border-myMarron rounded-xl shadow-lg focus:ring-4 focus:ring-myMarron focus:outline-none transition ease-in-out duration-300"
+  >
+    {etatOptions.map((option) => (
+      <option key={option} value={option} className="text-gray-700 text-lg">
+        {option}
+      </option>
+    ))}
+  </select>
+</div>
+
+
       <Table
         headers={headers}
-        data={achats.map((achat) => ({
+        data={achatsFiltres.map((achat) => ({
           ...achat,
           dateCommande: formatDateToFrench(achat.dateCommande),
           dateLivraisonClient: formatDateToFrench(achat.dateLivraisonClient),
@@ -170,11 +216,15 @@ export default function AchatAd() {
       />
 {/* Modal de détails d'achat */}
 {isDetailModalOpen && achatDetails && (
-  <Modal isOpen={isDetailModalOpen} onClose={handleCloseModal} labelAction="Fermer">
+  <Modal isOpen={isDetailModalOpen} onAction={() => generateInvoicePDF(achatDetails.refAchat)} onClose={handleCloseModal} labelAction="Générer facture">
     <div className="p-3 space-y-3">
       {/* Titre */}
       <h2 className="text-lg font-semibold text-center">Détails de l'Achat</h2>
-
+      {paymentStatusMessage && (
+          <div className="p-3 mt-4 text-center bg-green-200 text-green-800 rounded-md">
+            {paymentStatusMessage}
+          </div>
+        )}
       {/* Section Achat avec layout parallèle */}
       <div className="flex space-x-8 overflow-y-auto">
         {/* Informations d'achat à gauche */}

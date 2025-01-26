@@ -5,10 +5,18 @@ import { useAuth } from "../../contexts/useAuth";
 import Avatar from "../Avatar";
 import { useCart } from "../../contexts/CartContext";
 import { FaShoppingCart } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import axios from "axios";
 import { formatDateToISO8601 } from "../../utils/formatDateToISO8601";
+import { useMessage } from "../../contexts/MessageContext";
+
+// Fonction pour calculer la date de livraison (48 heures après la date actuelle)
+const calculateDeliveryDate = () => {
+  const now = new Date();
+  now.setHours(now.getHours() + 48);  // Ajoute 48 heures à la date actuelle
+  return now.toISOString().slice(0, 16);  // Formate la date pour l'input "datetime-local"
+};
 
 export default function Header() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -17,9 +25,26 @@ export default function Header() {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [lieuLivraison, setLieuLivraison] = useState("");
-  const [dateLivraisonClient, setDateLivraisonClient] = useState("");
+  const [dateLivraisonClient, setDateLivraisonClient] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
- 
+  const [isDateValid, setIsDateValid] = useState(true);
+  const { setMessage } = useMessage();
+
+  useEffect(() => {
+    setDateLivraisonClient(calculateDeliveryDate()); // Définit la date de livraison par défaut à 48h après la date actuelle
+  }, []);
+
+  const handleDateChange = (e) => {
+    const selectedDate =e.target.value;
+    if (selectedDate <= calculateDeliveryDate()) {
+      setIsDateValid(false);
+      setDateLivraisonClient(e.target.value)
+    } else {
+      setIsDateValid(true);
+    }
+    //setDateLivraisonClient(selectedDate);
+  };
+
   const numMatricule = user?.numMatricule;
   // const numMatricule = "C000001";
   const openCartModal = () => setIsCartModalOpen(true);
@@ -48,7 +73,7 @@ export default function Header() {
   };
   const handleCheckout = async () => {
     if (!lieuLivraison || !dateLivraisonClient || cartItems.length === 0) {
-      alert("Veuillez remplir tous les champs et ajouter des produits au panier.");
+      setMessage("error", "Veuillez remplir tous les champs et ajouter des produits au panier.");
       return;
     }
     const details = cartItems.map((item) => ({
@@ -70,19 +95,23 @@ export default function Header() {
       etat,
       // mailStaff
     };
-    console.log("Achat ", payload);
-    try {
+    if (!isDateValid) {
+      return;
+    }   
+     try {
       setIsLoading(true);
       const response = await axios.post("http://localhost:8080/achat/add", payload);
       console.log("dataaaa", response)
        const refAchat= response.data?.ref;
-      alert("Achat validé avec succès !");
+      setMessage("success", "Achat validé avec succès !");
+
       setCartItems([]); 
       closeCartModal();
       navigate("/checkout/"+refAchat);
     } catch (error) {
       console.error("Erreur lors de la validation de l'achat :", error);
-      alert("Une erreur est survenue. Veuillez réessayer.");
+      setMessage("error", "Une erreur est survenue. Veuillez réessayer");
+
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +119,7 @@ export default function Header() {
 
   const navigations =
     isAuthenticated && ["STAFF_ADMIN", "ADMIN"].includes(user?.role)
-      ? [{ name: "Accueil", href: "/" }]
+      ? [{ name: "Partie client", href: "/" }]
       : [
           { name: "Accueil", href: "/" },
           { name: "Discussion", href: "/discussion" },
@@ -135,7 +164,7 @@ export default function Header() {
             <span
             className={`text-myWhite px-2 py-1 rounded-full font-bold text-xl`}
           >
-            <Link to="/admin">Tableau de bord</Link>
+            <Link to="/admin">Partie admin</Link>
           </span>
           )}
           {/* Boutons utilisateur */}
@@ -252,9 +281,15 @@ export default function Header() {
                 type="datetime-local"
                 name="dateLivraisonClient"
                 value={dateLivraisonClient}
-                onChange={(e) => setDateLivraisonClient(e.target.value)}
+                onChange={handleDateChange} 
                 className="mb-2 border p-2 rounded w-full"
               />
+                {!isDateValid && (
+                  <p className="text-red-500 text-sm">
+                    La date de livraison doit être au moins 48h après votre commande. Nous vous contacterons pour confirmer un jour disponible avant cette date.
+                  </p>
+                )}
+
             </div>
             <div className="mt-4 flex justify-between items-center">
               <h3 className="text-xl font-bold">Total : {calculateTotal().toFixed(2)} AR</h3>

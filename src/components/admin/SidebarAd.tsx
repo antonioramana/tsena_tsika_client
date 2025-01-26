@@ -5,7 +5,7 @@ export default function SidebarAd() {
   const location = useLocation(); 
 
   const navigations = [
-    { name: "Accueil", href: "/admin/accueil", icon: <FaHome /> },
+    { name: "Dashboard", href: "/admin/accueil", icon: <FaHome /> },
     { name: "Client", href: "/admin/client", icon: <FaUser /> },
     { name: "Staff", href: "/admin/staff", icon: <FaUsers /> },
     { name: "Discussion", href: "/admin/discussion", icon: <FaComments /> },

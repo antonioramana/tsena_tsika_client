@@ -1,28 +1,30 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FaUsers, FaTruck, FaShoppingCart, FaMoneyBill, FaBox, FaStore } from "react-icons/fa";
 
 const AccueilAd = () => {
-  // Données statiques
-  const stats = {
-    nbClient: 3,
-    nbFournisseur: 2,
-    nbStaff: 2,
-    nbArticle: 3,
-    nbProduit: 4,
-    nbAchat: 2,
-    nbPaiement: 2,
-  };
+const [loading, setLoading]= useState(true);
+const [stats, setStats]= useState([]);
+ 
+  useEffect(() => {
+    // Récupération des données
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:8080/dashboard");
+        setStats(data);
+       } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const lastClients = [
-    { name: "John Doe", date: "2025-01-19" },
-    { name: "Philipe", date: "2025-01-18" },
-    { name: "Santatra", date: "2025-01-17" },
-  ];
+    fetchData();
+  }, []);
 
-  const lastPurchases = [
-    { client: "Santatra", date: "2025-01-19", payment: 1500000 },
-    { client: "Philipe", date: "2025-01-18", payment: 210000 },
-  ];
+  if (loading) {
+    return <div className="text-center mt-10 text-xl">Chargement...</div>;
+  }
 
   return (
     <div className="p-6 space-y-6 bg-gray-100 min-h-screen">
@@ -38,45 +40,62 @@ const AccueilAd = () => {
         <Card title="Articles" value={stats.nbArticle} icon={<FaBox />} color="bg-purple-500" />
         <Card title="Produits" value={stats.nbProduit} icon={<FaShoppingCart />} color="bg-pink-500" />
         <Card title="Achats" value={stats.nbAchat} icon={<FaShoppingCart />} color="bg-teal-500" />
-        <Card title="Paiements" value={stats.nbPaiement} icon={<FaMoneyBill />} color="bg-red-500" />
+        <Card title="Paiements" value={stats.nbPaiment} icon={<FaMoneyBill />} color="bg-red-500" />
       </div>
 
-      {/* Split View Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Last Clients */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Derniers Clients</h2>
-          <ul className="space-y-3">
-            {lastClients.map((client, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
-              >
-                <span className="font-medium text-gray-600">{client.name}</span>
-                <span className="text-sm text-gray-500">{client.date}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+     {/* Split View Section */}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  {/* Last Clients */}
+  <div className="bg-white rounded-md shadow-sm p-4">
+    <h2 className="text-base font-semibold text-gray-700 mb-3">Derniers Clients</h2>
+    <ul className="space-y-2">
+      {stats.lastClient.map((client, index) => (
+        <li
+          key={index}
+          className="flex justify-between items-center bg-gray-100 p-2 rounded-sm"
+        >
+          <span className="text-sm font-medium text-gray-600">{client.nomClient}</span>
+          <span className="text-xs text-gray-500">{client.numMatricule}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
 
-        {/* Last Purchases */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Derniers Achats</h2>
-          <ul className="space-y-3">
-            {lastPurchases.map((purchase, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
-              >
-                <div>
-                  <p className="font-medium text-gray-600">{purchase.client}</p>
-                  <p className="text-sm text-gray-500">{purchase.date}</p>
-                </div>
-                <span className="text-sm text-green-600 font-bold">{purchase.payment} Ar</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+  {/* Last Purchases */}
+  <div className="bg-white rounded-md shadow-sm p-4">
+    <h2 className="text-base font-semibold text-gray-700 mb-3">Derniers Achats</h2>
+    <div className="overflow-x-auto bg-white shadow-sm rounded-md border border-gray-200">
+      <table className="w-full text-xs text-left text-gray-500">
+        <thead className="bg-gray-50 text-gray-700 uppercase">
+          <tr>
+            <th className="px-2 py-1">Référence</th>
+            <th className="px-2 py-1">Type</th>
+            <th className="px-2 py-1">Mode</th>
+            <th className="px-2 py-1">Montant</th>
+            <th className="px-2 py-1">Client</th>
+            <th className="px-2 py-1">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stats.lastPaiment.map((payment, index) => (
+            <tr key={index} className="border-b">
+              <td className="px-2 py-1">{payment.reference || "N/A"}</td>
+              <td className="px-2 py-1">{payment.typePaiment}</td>
+              <td className="px-2 py-1">{payment.modePaiment}</td>
+              <td className="px-2 py-1 text-blue-500 font-bold">
+                  {payment.montant} Ar
+              </td>
+              <td className="px-2 py-1">{payment.client.nomClient}</td>
+              <td className="px-2 py-1">
+                {new Date(payment.datePaiment).toLocaleDateString("fr-FR")}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import MyMarronButton from "../../components/MyMarronButton";
+import MySecondaryButton from "../../components/MySecondaryButton";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -93,7 +95,7 @@ export default function Register() {
           value={formData.nomClient}
           onChange={handleChange}
           required
-          className="w-full border rounded p-2"
+          className="w-full px-10 py-3 border border-myYellow rounded-md focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-myYellow/50 transition-all duration-300 ease-in-out transform focus:scale-105"
         />
         <input
           type="email"
@@ -102,7 +104,7 @@ export default function Register() {
           value={formData.mailClient}
           onChange={handleChange}
           required
-          className="w-full border rounded p-2"
+          className="w-full px-10 py-3 border border-myYellow rounded-md focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-myYellow/50 transition-all duration-300 ease-in-out transform focus:scale-105"
         />
         <input
           type="text"
@@ -111,7 +113,7 @@ export default function Register() {
           value={formData.contactClient}
           onChange={handleChange}
           required
-          className="w-full border rounded p-2"
+          className="w-full px-10 py-3 border border-myYellow rounded-md focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-myYellow/50 transition-all duration-300 ease-in-out transform focus:scale-105"
         />
         <input
           type="text"
@@ -120,7 +122,7 @@ export default function Register() {
           value={formData.adresseClient}
           onChange={handleChange}
           required
-          className="w-full border rounded p-2"
+          className="w-full px-10 py-3 border border-myYellow rounded-md focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-myYellow/50 transition-all duration-300 ease-in-out transform focus:scale-105"
         />
         <input
           type="text"
@@ -129,7 +131,7 @@ export default function Register() {
           value={formData.domaineActiviteClient}
           onChange={handleChange}
           required
-          className="w-full border rounded p-2"
+          className="w-full px-10 py-3 border border-myYellow rounded-md focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-myYellow/50 transition-all duration-300 ease-in-out transform focus:scale-105"
         />
         <input
           type="password"
@@ -138,7 +140,7 @@ export default function Register() {
           value={formData.mdpClient}
           onChange={handleChange}
           required
-          className="w-full border rounded p-2"
+          className="w-full px-10 py-3 border border-myYellow rounded-md focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-myYellow/50 transition-all duration-300 ease-in-out transform focus:scale-105"
         />
         <input
           type="password"
@@ -147,18 +149,27 @@ export default function Register() {
           value={formData.confirmMdpClient}
           onChange={handleChange}
           required
-          className="w-full border rounded p-2"
+          className="w-full px-10 py-3 border border-myYellow rounded-md focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-myYellow/50 transition-all duration-300 ease-in-out transform focus:scale-105"
         />
         {error && <div className="text-orange-600 text-center">{error}</div>}
         {success && <div className="text-green-600 text-center">{success}</div>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-myMarron text-white p-2 rounded shadow hover:bg-myMarron-dark"
-        >
+        <div className="mt-6 space-y-4">
+          <MyMarronButton type="submit" disabled={loading}>
           {loading ? "Inscription en cours..." : "S'inscrire"}
-        </button>
+            </MyMarronButton>
+            <Link to="/" className="block">
+              <MySecondaryButton>Annuler</MySecondaryButton>
+            </Link>
+          </div>
       </form>
+      <div className="mt-6 text-center space-y-4">
+          <p className="text-sm mt-4">
+           Déjat un compte ?{" "}
+           <Link to="/connexion" className="text-myYellow hover:underline">
+             Se connecter 
+           </Link>
+         </p> 
+      </div>
     </div>
   );
 }

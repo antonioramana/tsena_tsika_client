@@ -199,69 +199,7 @@ export default function Accueil() {
           >
             Voir Plus
           </Link>
-        </div>
-        <div className="flex justify-between items-center px-64 mb-10">
-        <img src={consult} />
-        <div>
-          <h2 className="text-6xl text-myYellow font-bold">Nos Produits</h2>
-          <p className="my-4 text-xl">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam
-            debitis ullam adipisci! Ex consectetur similique nulla incidunt
-            consequuntur eum quibusdam excepturi laborum, voluptate adipisci
-            doloribus nam iste laboriosam odio officiis.
-          </p>
-          <button
-            className="bg-myYellow text-myWhite py-4 px-8 text-xl rounded-xl 
-           transition-all duration-300 hover:bg-myYellowLin"
-          >
-            Consultez-nous
-          </button>
-        </div>
-      </div>
-      <div className="flex flex-col items-center justify-center mb-10">
-        <h2 className="font-bold text-6xl text-myYellow">
-          Ils parlent de nous
-        </h2>
-        <p className="text-2xl">
-          Ne contente pas de nos paroles, lis ce qu'ils disent de nous
-        </p>
-        <div className="flex gap-7 my-4">
-          <Temoignage pdp={pdp} nom="Eloi Jospin" />
-          <Temoignage pdp={pdp} nom="Eloi Jospin" />
-          <Temoignage pdp={pdp} nom="Eloi Jospin" />
-        </div>
-      </div>
-      <div className="flex flex-col items-center text-center mx-72 mb-10">
-        <h2 className="font-bold text-6xl text-myYellow">Ne manque rien</h2>
-        <p className="text-xl">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto
-          officia eius quas obcaecati dicta iusto commodi. Soluta, sequi
-          deleniti inventore.
-        </p>
-        <div className="flex gap-8 justify-center items-center">
-          <div className="relative">
-            <IoMail className="text-myYellow text-4xl absolute left-2 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Votre adresse email"
-              className="bg-myGray indent-10 text-xl p-2 rounded-lg w-[400px] outline-none border border-myYellow"
-            />
-          </div>
-          <button className="bg-myYellow text-myWhite px-8 py-2 text-xl rounded-lg ">
-            Envoyer
-          </button>
-        </div>
-      </div>
-      <div className="bg-myYellowLin h-48 mb-10 py-10 px-32">
-        <h2 className="text-myWhite text-center text-6xl">
-          Aidez nous à rendre Tsena Tsika encore meilleur en laissant ton avis
-        </h2>
-      </div>
-      <div className="h-48 mb-10 py-10 px-32">
-        <h2 className="text-center text-6xl font-semibold">
-          Plus de 20 000 clients sont achetez nos produits
-        </h2>
-      </div>        
+        </div>       
       </div>
     </div>
   );

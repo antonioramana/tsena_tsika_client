@@ -206,7 +206,7 @@ const MarchandiseAd = () => {
           onAction={handleModalSubmit}
           labelAction={modalAction === "create" ? "Ajouter" : "Mettre à jour"}
         >
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[75vh] overflow-y-auto">
             {activeTab === "articles" ? (
               <>
                 <div className="flex items-center justify-center py-4 bg-gray-100">

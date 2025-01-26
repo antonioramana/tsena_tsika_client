@@ -73,8 +73,8 @@ export default function StaffAd() {
       newErrors.mailStaff = "L'email n'est pas valide.";
     }
     if (!staffData.role) newErrors.role = "Le rôle est requis.";
-    if (!staffData.mdpStaff) newErrors.mdpStaff = "Le mot de passe est requis.";
-    if (staffData.mdpStaff !== staffData.confirmMdpStaff) {
+    //if (!staffData.mdpStaff) newErrors.mdpStaff = "Le mot de passe est requis.";
+    if (staffData.mdpStaff && staffData.mdpStaff !== staffData.confirmMdpStaff) {
       newErrors.confirmMdpStaff = "La confirmation du mot de passe ne correspond pas.";
     }
 
@@ -105,11 +105,16 @@ export default function StaffAd() {
 
   const handleEditStaff = (staff) => {
     setEditStaffId(staff.id);
-    setStaffData({ ...staff });
+    setStaffData({
+      ...staff,
+      mdpStaff: "", // Vide le mot de passe lors de l'édition
+      confirmMdpStaff: "", // Vide la confirmation du mot de passe
+    });
     setIsEditModalOpen(true);
   };
 
   const handleUpdateStaff = () => {
+    console.log("data", staffData);
     if (validateForm() && editStaffId !== null) {
       axios
         .put(`http://localhost:8080/staff/edit/${staffData.mailStaff}`, {

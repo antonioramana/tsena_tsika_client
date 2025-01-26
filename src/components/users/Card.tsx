@@ -17,27 +17,45 @@ export default function Card({ id, title, price, image }: CardProps) {
   };
 
   return (
-    <div className="bg-myWhite w-64 h-[400px] rounded-b-lg overflow-hidden shadow-lg">
-      <h2 className="font-bold text-2xl m-2">{title}</h2>
-      <div className="relative">
-        <img src={image} className="h-64 w-full object-contain" />
+    <div className="bg-myWhite w-72 h-[500px] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
+      {/* Titre */}
+      <h2 className="font-bold text-2xl text-center p-4 h-[80px] flex items-center justify-center">
+        {title}
+      </h2>
+
+      {/* Image */}
+      <div className="relative flex-1 flex items-center justify-center bg-gray-100">
+        <img
+          src={image}
+          className="h-60 w-full object-contain"
+          alt={title}
+        />
         <FaShoppingCart
-          className="absolute right-4 top-4 text-xl text-myYellow cursor-pointer"
+          className="absolute right-4 top-4 text-2xl text-myYellow cursor-pointer hover:scale-110 transition-transform duration-200"
           onClick={handleAddToCart}
         />
       </div>
-      <div className="border p-2 border-myGray">
-        <div className="flex gap-4 text-lg">
+
+      {/* Détails */}
+      <div className="border-t p-4 border-myGray h-[140px] flex flex-col justify-between">
+        {/* Actions */}
+        <div className="flex gap-4 text-base justify-between items-center">
           <Link
             to={`/commande/produit/${id}`}
-            className="text-myWhite bg-myYellowLin px-2 py-1 rounded-full"
+            className="text-myWhite bg-myYellowLin px-4 py-2 rounded-full text-center hover:bg-myYellow transition-colors duration-200"
           >
             Acheter
           </Link>
-          <Link to={`/commande/produit/${id}`}>Plus de détails</Link>
+          <Link
+            to={`/commande/produit/${id}`}
+            className="hover:underline"
+          >
+            Plus de détails
+          </Link>
         </div>
-        <h2 className="font-bold text-2xl m-2">
-          <span className="text-myMarron">Ar</span> {price}
+        {/* Prix */}
+        <h2 className="font-bold text-2xl text-center mt-4 ">
+          <span className="text-myMarron">Ar</span> {price.toLocaleString()}
         </h2>
       </div>
     </div>

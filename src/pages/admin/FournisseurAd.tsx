@@ -10,7 +10,10 @@ export default function FournisseurAd() {
   const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
   const [fournisseurData, setFournisseurData] = useState({
     nom: "",
+    fournisseurMatricule:"",
+    status: "Actif",
     mail: "",
+    contact: "",
     adresse: "",
     domaineActiviteFournisseur: "",
     mdpFournisseur: "",
@@ -36,7 +39,8 @@ export default function FournisseurAd() {
     axios
     .get("http://localhost:8080/fournisseur/showall")
     .then((response) => {
-      setFournisseurs(response.data);
+      setFournisseurs(response.data);      console.log("fff",response.data);
+
     })
     .catch((error) => console.error("Erreur lors du chargement des fournisseurs:", error));
   }
@@ -52,7 +56,10 @@ export default function FournisseurAd() {
     setIsDeleteConfirmModalOpen(false);
     setFournisseurData({
       nom: "",
+      fournisseurMatricule:"",
+      status: "Actif",
       mail: "",
+      contact: "",
       adresse: "",
       domaineActiviteFournisseur: "",
       mdpFournisseur: "",
@@ -71,6 +78,8 @@ export default function FournisseurAd() {
   const validateForm = () => {
     const newErrors = {};
     if (!fournisseurData.nom) newErrors.nom = "Le nom est requis.";
+    if (!fournisseurData.contact) newErrors.contact = "Le contact est requis.";
+    if (!fournisseurData.fournisseurMatricule) newErrors.fournisseurMatricule = "La matricule est requis.";
     if (!fournisseurData.mail) {
       newErrors.mail = "L'email est requis.";
     } else if (!/\S+@\S+\.\S+/.test(fournisseurData.mail)) {
@@ -78,7 +87,7 @@ export default function FournisseurAd() {
     }
     if (!fournisseurData.adresse) newErrors.adresse = "L'adresse est requise.";
     if (!fournisseurData.domaineActiviteFournisseur) newErrors.domaineActiviteFournisseur = "Le domaine est requis.";
-    if (!fournisseurData.mdpFournisseur) newErrors.mdpFournisseur = "Le mot de passe est requis.";
+    // if (!fournisseurData.mdpFournisseur) newErrors.mdpFournisseur = "Le mot de passe est requis.";
     if (fournisseurData.mdpFournisseur !== fournisseurData.confirmMdpFournisseur) {
       newErrors.confirmMdpFournisseur = "La confirmation du mot de passe ne correspond pas.";
     }
@@ -88,7 +97,6 @@ export default function FournisseurAd() {
   };
 
   const handleAddFournisseur = () => {
-   console.log("data", fournisseurData)
     if (validateForm()) {
       axios
         .post("http://localhost:8080/fournisseur/register", fournisseurData)
@@ -113,7 +121,6 @@ export default function FournisseurAd() {
 
   const handleUpdateFournisseur = () => {
     if (validateForm() && editFournisseurId !== null) {
-      console.log("data", fournisseurData)
       axios
         .put(`http://localhost:8080/fournisseur/edit/${editFournisseurId}`, fournisseurData) // Utilisation de numMatricule pour la mise à jour
         .then((response) => {

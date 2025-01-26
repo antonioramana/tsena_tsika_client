@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { useMessage } from "../../contexts/MessageContext";
 
 const Checkout = () => {
   const { refAchat } = useParams();
   const [achatDetails, setAchatDetails] = useState(null);
-  
+  const [isDateValid, setIsDateValid] = useState(true);
+  const { setMessage } = useMessage();
+
   const [paymentDetails, setPaymentDetails] = useState({
     typePaiment: "",
     modePaiment: "",
@@ -40,13 +43,25 @@ const Checkout = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+  
+    if (name === "datePaiement") {
+      const today = new Date();
+      const selectedDate = new Date(value);
+      today.setHours(0, 0, 0, 0); 
+      setIsDateValid(selectedDate >= today);
+    }
+  
     setPaymentDetails((prev) => ({ ...prev, [name]: value }));
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (reste === 0) {
-      alert("Paiement déjà complété !");
+      setMessage("error","Paiement déjà complété !")
+      return;
+    }
+    if (!isDateValid) {
       return;
     }
 
@@ -55,6 +70,7 @@ const Checkout = () => {
         ...paymentDetails,
         refAchat,
       });
+      setMessage("success","Paiement effectué avec succès !")
       console.log("", paymentDetails)
       setReste(response.data.reste);
       navigate("/suivi-achats")
@@ -181,6 +197,7 @@ const Checkout = () => {
                 className="w-full p-2 border rounded"
                 required
                 min={isUnitranche ? achatDetails?.reste : 1}
+                max={reste > 0 ? achatDetails?.reste : achatDetails?.total}
               />
             </div>
 
@@ -190,6 +207,7 @@ const Checkout = () => {
                 <input
                   type="text"
                   name="transactionId"
+                  placeholder="ID de la transaction"
                   value={paymentDetails.transactionId}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded"
@@ -204,6 +222,7 @@ const Checkout = () => {
                 <input
                   type="text"
                   name="reference"
+                  placeholder="Référence de la transaction"
                   value={paymentDetails.reference}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded"
@@ -217,7 +236,8 @@ const Checkout = () => {
                 <label className="block mb-1">Lieu de Paiement</label>
                 <input
                   type="text"
-                  name="lieuPaiement"
+                  name="lieuPaiment"
+                  placeholder="Lieu de rendez-vous pour le paiment"
                   value={paymentDetails.lieuPaiment}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded"
@@ -233,10 +253,16 @@ const Checkout = () => {
                 name="datePaiement"
                 value={paymentDetails.datePaiement}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded"
+                className={`w-full p-2 border rounded ${!isDateValid ? "border-red-500" : ""}`}
                 required
               />
+              {!isDateValid && (
+                <p className="text-red-500 text-sm">
+                  La date de paiement ne peut pas être antérieure à aujourd'hui.
+                </p>
+              )}
             </div>
+
             {getPaymentInfo()}
             <button
               type="submit"

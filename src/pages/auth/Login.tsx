@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/useAuth";
 import Input from "../../components/Input";
 import MyMarronButton from "../../components/MyMarronButton";
+import MySecondaryButton from "../../components/MySecondaryButton";
 
 export default function Login() {
   const { login } = useAuth();
@@ -110,20 +111,28 @@ export default function Login() {
           required
         />
         {error && <div className="text-orange-600 text-center">{error}</div>}
-        <MyMarronButton type="submit" disabled={loading}>
-          {loading ? "Connexion en cours..." : "Se connecter"}
-        </MyMarronButton>
+        <div className="mt-6 space-y-4">
+          <MyMarronButton type="submit" disabled={loading}>
+              {loading ? "Connexion en cours..." : "Se connecter"}
+            </MyMarronButton>
+            <Link to="/" className="block">
+              <MySecondaryButton>Annuler</MySecondaryButton>
+            </Link>
+          </div>
       </form>
       <div className="mt-6 text-center space-y-4">
         <a href="#" className="block text-sm text-myYellow hover:underline">
           Mot de passe oublié ?
         </a>
-        <p className="text-sm mt-4">
-          Pas encore de compte ?{" "}
-          <Link to="/inscription" className="text-myYellow hover:underline">
-            Créer un compte
-          </Link>
-        </p>
+        {role !== "staff" &&
+           <p className="text-sm mt-4">
+           Pas encore de compte ?{" "}
+           <Link to="/inscription" className="text-myYellow hover:underline">
+             Créer un compte
+           </Link>
+         </p> 
+        }
+       
       </div>
     </div>
   );

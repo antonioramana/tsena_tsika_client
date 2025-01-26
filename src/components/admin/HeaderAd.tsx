@@ -11,7 +11,7 @@ export default function HeaderAd() {
       navigate("/");
     };
   return (
-    <div className="h-20 shadow-md flex justify-between px-5 items-center">
+    <div className="h-20 shadow-md flex bg-white justify-between px-5 items-center">
       <div className="relative group">
         <input
           type="text"

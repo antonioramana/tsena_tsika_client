@@ -4,6 +4,8 @@ interface FournisseurAdFormProps {
   error: null | string;
   fournisseurData: { 
     nom: string;
+    contact: string;
+    fournisseurMatricule: string;
     mail: string;
     adresse: string;
     domaineActiviteFournisseur: string;
@@ -12,6 +14,8 @@ interface FournisseurAdFormProps {
   };
   errors: { 
     nom?: string;
+    contact?: string;
+    fournisseurMatricule: string;
     mail?: string;
     adresse?: string;
     domaineActiviteFournisseur?: string;
@@ -28,6 +32,32 @@ const FournisseurAdForm: React.FC<FournisseurAdFormProps> = ({ fournisseurData, 
         {error &&
          <div className="text-lg font-semibold text-red-600">{error}</div>
         }
+      <div className="flex space-x-4"> 
+       <div className="flex flex-col w-1/2">
+          <label className="text-gray-600">Matricule</label>
+          <input
+            type="text"
+            name="fournisseurMatricule"
+            value={fournisseurData.fournisseurMatricule}
+            onChange={onChange}
+            className={`border ${errors.fournisseurMatricule ? 'border-red-500' : 'border-gray-300'} rounded-md p-2`}
+            placeholder="Entrez la matricule"
+          />
+          {errors.fournisseurMatricule && <span className="text-red-500 text-sm">{errors.fournisseurMatricule}</span>}
+          </div>
+          <div className="flex flex-col w-1/2">
+          <label className="text-gray-600">Contact</label>
+          <input
+            type="text"
+            name="contact"
+            value={fournisseurData.contact}
+            onChange={onChange}
+            className={`border ${errors.contact ? 'border-red-500' : 'border-gray-300'} rounded-md p-2`}
+            placeholder="Entrez le contact"
+          />
+          {errors.contact && <span className="text-red-500 text-sm">{errors.contact}</span>}
+          </div>
+      </div>
       <div className="flex space-x-4">
         <div className="flex flex-col w-1/2">
           <label className="text-gray-600">Nom</label>

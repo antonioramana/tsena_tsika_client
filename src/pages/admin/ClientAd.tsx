@@ -11,6 +11,7 @@ export default function ClientAd() {
   const [clientData, setClientData] = useState({
     nomClient: "",
     mailClient: "",
+    contactClient: "",
     adresseClient: "",
     domaineActiviteClient: "",
     mdpClient: "",
@@ -53,6 +54,7 @@ export default function ClientAd() {
     setClientData({
       nomClient: "",
       mailClient: "",
+      contactClient: "",
       adresseClient: "",
       domaineActiviteClient: "",
       mdpClient: "",
@@ -71,6 +73,7 @@ export default function ClientAd() {
   const validateForm = () => {
     const newErrors = {};
     if (!clientData.nomClient) newErrors.nomClient = "Le nom est requis.";
+    if (!clientData.contactClient) newErrors.contactClient = "Le nom est requis.";
     if (!clientData.mailClient) {
       newErrors.mailClient = "L'email est requis.";
     } else if (!/\S+@\S+\.\S+/.test(clientData.mailClient)) {
@@ -78,14 +81,15 @@ export default function ClientAd() {
     }
     if (!clientData.adresseClient) newErrors.adresseClient = "L'adresse est requise.";
     if (!clientData.domaineActiviteClient) newErrors.domaineActiviteClient = "Le domaine est requis.";
-    if (!clientData.mdpClient) newErrors.mdpClient = "Le mot de passe est requis.";
-    if (clientData.mdpClient !== clientData.confirmMdpClient) {
+  
+    if (clientData.mdpClient && clientData.mdpClient !== clientData.confirmMdpClient) {
       newErrors.confirmMdpClient = "La confirmation du mot de passe ne correspond pas.";
     }
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  
 
   const handleAddClient = () => {
     if (validateForm()) {
@@ -105,10 +109,15 @@ export default function ClientAd() {
   };
 
   const handleEditClient = (client) => {
-    setEditClientId(client.numMatricule); // Utilisation de numMatricule
-    setClientData({ ...client });
+    setEditClientId(client.numMatricule); 
+    setClientData({
+      ...client,
+      mdpClient: "", // Vide le mot de passe lors de l'édition
+      confirmMdpClient: "", // Vide la confirmation du mot de passe
+    });
     setIsEditModalOpen(true);
   };
+  
 
   const handleUpdateClient = () => {
     if (validateForm() && editClientId !== null) {

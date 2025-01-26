@@ -4,6 +4,13 @@ import Modal from "../../components/Modal";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/useAuth";
 import { formatDateToISO8601 } from "../../utils/formatDateToISO8601";
+import { useMessage } from "../../contexts/MessageContext";
+
+const calculateDeliveryDate = () => {
+  const now = new Date();
+  now.setHours(now.getHours() + 48);  // Ajoute 48 heures à la date actuelle
+  return now.toISOString().slice(0, 16);  // Formate la date pour l'input "datetime-local"
+};
 
 export default function Commande() {
   const { user }= useAuth();
@@ -11,9 +18,17 @@ export default function Commande() {
   const [product, setProduct] = useState<any>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [lieuLivraison, setLieuLivraison] = useState<string>("");
-  const [dateLivraisonClient, setDateLivraisonClient] = useState<string>("");
+  const [dateLivraisonClient, setDateLivraisonClient] = useState(new Date());
+
   const dateCommande =  new Date().toISOString();
    const navigate= useNavigate();
+   const [isDateValid, setIsDateValid] = useState(true);
+  const { setMessage } = useMessage();
+
+  useEffect(() => {
+      setDateLivraisonClient(calculateDeliveryDate()); 
+    }, []);
+   
    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
   useEffect(() => {
@@ -22,7 +37,16 @@ export default function Commande() {
       .then((response) => setProduct(response.data))
       .catch((error) => console.error("Erreur de récupération:", error));
   }, [productId]);
-
+  const handleDateChange = (e) => {
+    const selectedDate =e.target.value;
+    if (selectedDate <= calculateDeliveryDate()) {
+      setIsDateValid(false);
+      setDateLivraisonClient(e.target.value)
+    } else {
+      setIsDateValid(true);
+    }
+    //setDateLivraisonClient(selectedDate);
+  };
   const handlePurchaseClick = () => {
     setIsModalOpen(true);
   };
@@ -39,16 +63,19 @@ export default function Commande() {
       direct: false, 
       etat: "En cours", 
     };
+    if (!isDateValid) {
+      return;
+    }
     try {
       const response = await axios.post("http://localhost:8080/achat/add", payload);
        const refAchat= response.data?.ref;
-       console.log("achat",response.data)
+       setMessage("success","Achat effectué avec succès!");
        if(refAchat){
          navigate("/checkout/"+refAchat);
        }
     } catch (error) {
       console.error("Erreur lors de la validation de l'achat :", error);
-      alert("Une erreur est survenue. Veuillez réessayer.");
+      setMessage("error","Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setIsModalOpen(false);
     } 
@@ -153,10 +180,15 @@ export default function Commande() {
             name="dateLivraisonClient"
             placeholder="Date de Livraison"
             value={dateLivraisonClient}
-            onChange={(e)=>setDateLivraisonClient(e.target.value)}
+            onChange={handleDateChange} 
             className="w-full border rounded-md p-2"
             required
           />
+           {!isDateValid && (
+                  <p className="text-red-500 text-sm">
+                    La date de livraison doit être au moins 48h après votre commande. Nous vous contacterons pour confirmer un jour disponible avant cette date.
+                  </p>
+               )}
         </div>
       </Modal>
     </div>
